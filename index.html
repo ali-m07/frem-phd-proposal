@@ -71,6 +71,18 @@
         #progressBarContainer:hover {
             transform: translateY(-1px);
         }
+        body.rtl #progressBarContainer {
+            direction: rtl;
+        }
+        body.rtl #progressBar {
+            margin-left: auto;
+            margin-right: 0;
+        }
+        body.rtl #progressBar > div {
+            right: auto;
+            left: 0;
+            transform: translateX(-50%) translateY(-50%);
+        }
         .presentation-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -857,7 +869,13 @@
         progressBarContainer.addEventListener('click', (e) => {
             const rect = progressBarContainer.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
-            const percentage = clickX / rect.width;
+            let percentage = clickX / rect.width;
+            
+            // For RTL, reverse the percentage
+            if (currentLang === 'fa') {
+                percentage = 1 - percentage;
+            }
+            
             const targetSlide = Math.round(percentage * slides.length);
             if (targetSlide >= 1 && targetSlide <= slides.length) {
                 const direction = targetSlide > currentSlide + 1 ? 'next' : 'prev';
@@ -869,7 +887,13 @@
         progressBarContainer.addEventListener('mousemove', (e) => {
             const rect = progressBarContainer.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
-            const percentage = clickX / rect.width;
+            let percentage = clickX / rect.width;
+            
+            // For RTL, reverse the percentage
+            if (currentLang === 'fa') {
+                percentage = 1 - percentage;
+            }
+            
             const targetSlide = Math.max(1, Math.min(slides.length, Math.round(percentage * slides.length)));
             updateTooltip(targetSlide);
             
