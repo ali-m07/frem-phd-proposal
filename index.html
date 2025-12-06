@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Future-Ready Entrepreneurship Model (FREM) - Ali Mansouri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6; /* blue-500 */
+            --bg-start: #e0f2fe; /* sky-100 */
+            --bg-end: #dbeafe; /* blue-100 */
+            --card-bg: rgba(255, 255, 255, 0.95); /* white with alpha */
+            --text-primary: #1e293b; /* slate-800 */
+            --text-secondary: #475569; /* slate-600 */
+            --border-color: rgba(203, 213, 225, 0.5); /* slate-300 with alpha */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+        body.rtl {
+            font-family: 'Vazirmatn', sans-serif;
+            direction: rtl;
+        }
+        #presentation-wrapper { perspective: 1500px; }
+        .slide {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.45, 0, 0.55, 1), opacity 0.8s cubic-bezier(0.45, 0, 0.55, 1);
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .slide.active { opacity: 1; transform: translateZ(0); pointer-events: auto; }
+        .slide.slide-enter-next { transform: translateZ(-1000px) rotateY(-45deg) translateX(100%); }
+        .slide.slide-exit-next { opacity: 0; transform: translateZ(-1000px) rotateY(45deg) translateX(-100%); }
+        .slide.slide-enter-prev { transform: translateZ(-1000px) rotateY(45deg) translateX(-100%); }
+        .slide.slide-exit-prev { opacity: 0; transform: translateZ(-1000px) rotateY(-45deg) translateX(100%); }
+        .slide.active .fade-in-item {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.7s ease-out forwards;
+        }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+        .slide.active .fade-in-item:nth-child(1) { animation-delay: 0.4s; }
+        .slide.active .fade-in-item:nth-child(2) { animation-delay: 0.6s; }
+        .slide.active .fade-in-item:nth-child(3) { animation-delay: 0.8s; }
+        .slide.active .fade-in-item:nth-child(4) { animation-delay: 1.0s; }
+        .slide.active .fade-in-item:nth-child(5) { animation-delay: 1.2s; }
+        .nav-button:disabled { opacity: 0.3; cursor: not-allowed; }
+        #progressBar { 
+            transition: width 0.4s ease-in-out;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        #progressBarContainer:hover #progressBar {
+            background-color: #2563eb; /* blue-600 */
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
+        }
+        #progressBarContainer {
+            transition: all 0.2s ease;
+        }
+        #progressBarContainer:hover {
+            transform: translateY(-1px);
+        }
+        .presentation-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        [data-lang="en"], [data-lang="fa"] { display: none; }
+        .image-container img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .image-container a:hover img {
+            transform: scale(1.05);
+        }
+        ul li strong { 
+            color: var(--primary-color); 
+            font-weight: 600;
+        }
+        .method-subtitle { 
+            color: #64748b; /* slate-500 */
+            font-weight: 500; 
+            font-size: 0.95rem;
+        }
+        .slide h2, .slide h3, .slide h4 {
+            color: var(--text-primary);
+        }
+        .slide p, .slide li, .slide td {
+            color: var(--text-secondary);
+        }
+        .title-primary {
+            color: var(--primary-color);
+        }
+        table thead th {
+            background-color: rgba(241, 245, 249, 0.8);
+            color: var(--text-primary);
+        }
+        table tbody td {
+            color: var(--text-secondary);
+        }
+        .bg-content-box {
+            background-color: rgba(248, 250, 252, 0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-6xl mx-auto">
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-2 sm:space-y-0">
+            <h1 class="text-xl font-semibold text-slate-700 text-center sm:text-left">
+                <span data-lang="en">PhD Proposal Presentation</span>
+                <span data-lang="fa">ارائه پروپوزال دکتری</span>
+            </h1>
+            <button id="lang-toggle" class="bg-white/70 border border-slate-300 backdrop-blur-sm rounded-md px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-white transition-colors">
+                <span data-lang="en">فارسی</span>
+                <span data-lang="fa">English</span>
+            </button>
+        </header>
+
+        <main id="presentation-wrapper" class="presentation-card rounded-2xl relative min-h-[70vh]">
+             <div class="p-8 sm:p-12 slide active" data-slide-index="0"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="1"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="2"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="3"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="4"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="5"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="6"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="7"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="8"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="9"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="10"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="11"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="12"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="13"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="14"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="15"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="16"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="17"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="18"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="19"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="20"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="21"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="22"></div>
+             <div class="p-8 sm:p-12 slide" data-slide-index="23"></div>
+        </main>
+
+        <footer class="w-full max-w-6xl mx-auto mt-6">
+            <div class="flex justify-between items-center">
+                <button id="prev-btn" class="nav-button bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-blue-600 transition-all disabled:bg-slate-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <div class="flex-grow mx-4 text-center">
+                    <span id="slide-counter" class="text-sm font-medium text-slate-600"></span>
+                </div>
+                <button id="next-btn" class="nav-button bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-blue-600 transition-all disabled:bg-slate-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-3 mt-4 overflow-visible relative cursor-pointer group" id="progressBarContainer">
+                <div id="progressBar" class="bg-blue-500 h-3 rounded-full transition-all duration-300 relative" style="width: 0%">
+                    <div class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-blue-600 rounded-full border-2 border-white shadow-md"></div>
+                </div>
+                <div id="progressTooltip" class="absolute bottom-full mb-2 left-0 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-slate-900 text-white text-xs px-3 py-1.5 rounded-md whitespace-nowrap z-20 shadow-lg">
+                    <span id="tooltipText">اسلاید 1</span>
+                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                        <div class="w-2 h-2 bg-slate-900 transform rotate-45"></div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- REWRITTEN & UPGRADED CONTENT ---
+        const slidesData = [
+             // Slide 1: Title
+            {
+                type: 'title',
+                en: {
+                    title: "The Future-Ready Entrepreneurship Model (FREM)",
+                    subtitle: "Developing and Validating a Dynamic Capabilities Framework for Navigating Future Uncertainty",
+                    author: "Ali Mansouri",
+                    role: "PhD Candidate, Futures Studies"
+                },
+                fa: {
+                    title: "مدل کارآفرینی آینده‌محور (FREM)",
+                    subtitle: "توسعه و اعتبارسنجی چارچوب قابلیت‌های پویا برای مواجهه با عدم قطعیت‌های آینده",
+                    author: "علی منصوری",
+                    role: "دانشجوی دکتری آینده‌پژوهی"
+                }
+            },
+            // Slide 2: The Problem
+            {
+                type: 'image_list',
+                image: { src: 'https://www.mdpi.com/mathematics/mathematics-11-01212/article_deploy/html/images/mathematics-11-01212-g001-550.jpg', alt: 'Abstract network representing complexity and uncertainty' },
+                en: {
+                    title: "The Strategic Imperative",
+                    points: [
+                        "The contemporary entrepreneurial landscape is defined by systemic <strong>Volatility, Uncertainty, Complexity, and Ambiguity (VUCA)</strong>.",
+                        "Legacy strategic tools, while foundational, are often insufficient for modeling the dynamics of non-linear environments.",
+                        "A consequential capabilities gap has emerged, leaving new ventures vulnerable to unforeseen market shifts.",
+                        "The focus of entrepreneurial assessment must evolve from validating launch readiness to building a capacity for <strong>long-term adaptation and endurance</strong>."
+                    ]
+                },
+                fa: {
+                    title: "ضرورت راهبردی تحقیق",
+                    points: [
+                        "محیط کارآفرینی معاصر با <strong>نوسان، عدم قطعیت، پیچیدگی و ابهام (VUCA)</strong> سیستمیک تعریف می‌شود.",
+                        "ابزارهای راهبردی سنتی، هرچند بنیادین، برای مدل‌سازی پویایی‌های محیط‌های غیرخطی اغلب ناکافی هستند.",
+                        "یک شکاف قابلیتی مهم پدید آمده که کسب‌وکارهای نوپا را در برابر تحولات پیش‌بینی‌نشده بازار آسیب‌پذیر می‌کند.",
+                        "تمرکز سنجش کارآفرینی باید از تأیید آمادگی برای شروع، به ایجاد ظرفیت برای <strong>سازگاری و پایداری بلندمدت</strong> تکامل یابد."
+                    ]
+                }
+            },
+            // Slide 3: Problem Statement - Part 1
+            {
+                type: 'problem_part',
+                en: {
+                    title: "🧩 Problem Statement: The VUCA Challenge",
+                    subtitle: "The Gap in Entrepreneurial Planning Models",
+                    content: "The twenty-first century business environment is increasingly characterized by <strong>volatility, uncertainty, complexity, and ambiguity—known collectively as VUCA</strong> (Rohrbeck & Schwarz, 2021). Under such conditions, entrepreneurship is not merely a driver of economic growth but also a critical mechanism for societal adaptation to uncertain futures.",
+                    second_para: "However, most existing entrepreneurial planning and capability models remain <strong>static, linear, and present-focused</strong>, emphasizing the ability to create a venture today rather than the capacity to anticipate, adapt, and transform for tomorrow (Zahra et al., 2019). This conceptual limitation has resulted in a substantial gap between real‑world challenges of entrepreneurs and the theoretical tools available to prepare them for deep uncertainty."
+                },
+                fa: {
+                    title: "📘 بیان مسئله: چالش VUCA",
+                    subtitle: "شکاف در مدل‌های برنامه‌ریزی کارآفرینی",
+                    content: "در عصر کنونی که از آن با واژه‌ی <strong>VUCA</strong> (Volatility, Uncertainty, Complexity & Ambiguity) یاد می‌شود، محیط‌های اقتصادی و فناوری با سرعتی فزاینده در حال دگرگونی‌اند (Rohrbeck & Schwarz, 2021). این وضعیت به‌ویژه برای کارآفرینان که عاملان اصلی نوآوری، تغییر و خلق ارزش در اقتصاد محسوب می‌شوند، دو پیامد اساسی دارد: نخست، تسریعِ بی‌سابقه‌ی چرخه‌ی عمر فرصت‌های کسب‌وکار؛ و دوم، شکنندگی مزیت رقابتی در اثر ظهور فناوری‌های برهم‌زننده نظیر هوش مصنوعی، بلاک‌چین و زیست‌فناوری (BCG, 2025).",
+                    second_para: "مطالعات نشان می‌دهد بسیاری از کارآفرینان هنوز در چارچوب ذهنی <strong>حال‌محور</strong> تصمیم می‌گیرند و تمرکزشان بر بقا و عملکرد کوتاه‌مدت است (Zahra et al., 2019)، در حالی که پایداری، نوآوری و رشد پایدار در محیط‌های نامطمئن، مستلزم نوعی <strong>«آمادگی آینده‌محور»</strong> است."
+                }
+            },
+            // Slide 4: Problem Statement - Part 2
+            {
+                type: 'problem_part',
+                en: {
+                    title: "🧩 Problem Statement: The Operationalization Gap",
+                    subtitle: "Limited Implementation at Entrepreneurial Level",
+                    content: "Although theoretical perspectives such as <strong>Dynamic Capabilities</strong> (Teece, Pisano & Shuen, 1997) and <strong>Strategic Foresight</strong> (Rohrbeck, 2010) have been widely explored in large‑firm contexts, very few empirical studies have operationalized these constructs at the entrepreneurial (micro) level.",
+                    second_para: "Available frameworks—including the Business Model Canvas (Osterwalder & Pigneur, 2010), the Future FITness Model (Rohrbeck et al., 2023), and various Entrepreneurial Readiness Scales—either emphasize organizational strategy rather than start‑up agility or lack coherent validation across contexts (Hindle & Klyver, 2007; Villegas, MIT DSpace, 2024). Consequently, there is <strong>no comprehensive, validated instrument capable of measuring and developing future readiness among entrepreneurs</strong>."
+                },
+                fa: {
+                    title: "📘 بیان مسئله: خلأ عملیاتی",
+                    subtitle: "فقدان ابزار عملیاتی در سطح خرد",
+                    content: "با وجود اهمیت حیاتی این موضوع، بررسی ادبیات نظری نشان می‌دهد که هنوز <strong>مدلی جامع و مبتنی بر شواهد</strong> برای اندازه‌گیری و توسعه‌ی آمادگی آینده در کارآفرینی وجود ندارد. اغلب چارچوب‌های موجود، مانند Entrepreneurial Readiness Models، تنها ظرفیت‌های فعلی (مانند مهارت، منابع، یا انگیزش) را می‌سنجند (Hindle & Klyver, 2007)، و فاقد دیدگاه آینده‌نگر هستند.",
+                    second_para: "در سوی دیگر، مدل‌های آینده‌پژوهانه‌ی شرکتی نظیر Corporate Foresight Maturity Model (Rohrbeck, 2010) در سطح کلان سازمان‌ها طراحی شده‌اند و برای کسب‌وکارهای نوپا یا فرد کارآفرین، قابل‌کاربرد نیستند. این شکاف نظری باعث شده مفاهیم مهمی همچون <strong>قابلیت‌های پویا</strong> و <strong>دوراندیشی راهبردی</strong> هنوز در سطح کارآفرینی خرد عملیاتی نشده و ابزار اجرایی نداشته باشند."
+                }
+            },
+            // Slide 5: Problem Statement - Part 3
+            {
+                type: 'problem_part',
+                en: {
+                    title: "🧩 Problem Statement: The Research Gap",
+                    subtitle: "Practical Implications & Core Research Question",
+                    content: "Practically, this absence generates multiple negative implications. Accelerators, venture capitalists, and policymakers have no standardized tool for assessing the future‑oriented capability of entrepreneurial teams. Investment and policy decisions are therefore often guided by short‑term financial metrics rather than scientifically grounded indicators of adaptive potential (OECD, 2023).",
+                    second_para: "<strong>Core Research Question:</strong><br><br>How can a comprehensive, empirically validated model be developed to conceptualize and measure future‑ready entrepreneurship, integrating dynamic capabilities and strategic foresight in a framework applicable to early‑stage ventures?"
+                },
+                fa: {
+                    title: "📘 بیان مسئله: شکاف پژوهش",
+                    subtitle: "پیامدهای کاربردی و پرسش تحقیق",
+                    content: "از منظر کاربردی نیز، نبود چنین مدلی پیامدهای قابل‌توجهی دارد. شتاب‌دهنده‌ها، سرمایه‌گذاران خطرپذیر و سیاست‌گذاران توسعه‌ی کارآفرینی، فاقد ابزار نظام‌مند برای ارزیابی آمادگی آینده تیم‌های کارآفرین هستند؛ در نتیجه، تصمیم‌های حمایتی و سرمایه‌گذاری بیشتر بر پایه‌ی شاخص‌های مالی جاری اتخاذ می‌شود تا ارزیابی علمی از قابلیت سازگاری آینده‌محور (Villegas, MIT DSpace, 2024).",
+                    second_para: "تجربه‌ی شکست استارتاپ‌ها در مواجهه با بحران‌ها و دگرگونی‌های فناورانه (مانند COVID‑19 یا AI Displacement Shock) نشان می‌دهد که این ناتوانی در یادگیری از آینده، یکی از علل ریشه‌ای مرگ زودرس کسب‌وکارهای نوپا است (OECD, 2023)."
+                }
+            },
+            // Slide 6: Problem Statement - Research Question
+            {
+                type: 'research_question',
+                en: {
+                    title: "📌 Core Research Question",
+                    subtitle: "بله، این همان سوال است",
+                    question: "How can a comprehensive, empirically validated model be developed to conceptualize and measure future‑ready entrepreneurship, integrating dynamic capabilities and strategic foresight in a framework applicable to early‑stage ventures?",
+                    subtitle_fa: ""
+                },
+                fa: {
+                    title: "📌 پرسش اصلی تحقیق",
+                    subtitle: "",
+                    question: "چگونه می‌توان مدلی جامع، علمی و اعتبارسنجی‌شده برای آمادگی آینده‌محور در کارآفرینی ارائه داد که هم از نظر نظری، مبتنی بر قابلیت‌های پویا و foresight باشد و هم از نظر عملی، برای کارآفرینان و سیاست‌گذاران قابل‌استفاده باشد؟",
+                    subtitle_fa: ""
+                }
+            },
+            // Slide 7: The Solution
+             {
+                type: 'image_text',
+                image: { src: 'https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', alt: 'Diverse team collaborating on a strategic blueprint' },
+                en: {
+                    title: "Proposed Contribution: The FREM Model",
+                    text: "This doctoral research proposes the <strong>Future-Ready Entrepreneurship Model (FREM)</strong>. It is conceptualized as a dynamic capabilities framework designed to operationalize strategic foresight within entrepreneurial ventures. The FREM includes seven main pillars: Vision and Strategy, Skills and Capabilities, Innovation Culture, Technology and Resources, Market Insight, Sustainability and Ethics, and Risk Management. The model provides a systematic methodology for founders to <strong>sense</strong> nascent opportunities and threats, <strong>seize</strong> competitive advantages through informed innovation, and <strong>transform</strong> their organizations to maintain evolutionary fitness in turbulent environments."
+                },
+                fa: {
+                    title: "راهکار پیشنهادی: مدل کارآفرینی آینده‌محور (FREM)",
+                    text: "این پژوهش با هدف توسعه و اعتبارسنجی <strong>مدل کارآفرینی آینده‌محور (FREM)</strong> انجام می‌شود. FREM یک چارچوب قابلیت‌های پویا است که بر اساس نظریه قابلیت‌های پویا و آینده‌نگاری استراتژیک طراحی شده و هفت ستون اصلی را شامل می‌شود: چشم‌انداز و استراتژی، مهارت‌ها و قابلیت‌ها، فرهنگ نوآوری، فناوری و منابع، بینش بازار، پایداری و اخلاق، و مدیریت ریسک. برخلاف مدل‌های ایستای موجود، FREM به‌صورت پویا عدم قطعیت‌ها را در نظر می‌گیرد و از سناریوسازی و نقشه‌برداری فناوری برای ناوبری در آینده‌های متعدد استفاده می‌کند."
+                }
+            },
+            // Slide 8: Methodology Overview
+            {
+                type: 'text',
+                en: {
+                    title: "Research Design & Methodology",
+                    text: "To ensure the highest standard of academic rigor, this research employs a <strong>multi-phase, mixed-methods design</strong>. The methodological architecture is explicitly informed by the robust validation protocols established in the corporate foresight literature, particularly aligning with the model construction logic of scholars like <strong>René Rohrbeck</strong>. This ensures the resultant framework is theoretically grounded, empirically verifiable, and practically applicable."
+                },
+                fa: {
+                    title: "طراحی و روش‌شناسی پژوهش",
+                    text: "برای تضمین بالاترین استاندارد دقت علمی، این پژوهش از یک <strong>طراحی چندمرحله‌ای با روش‌های ترکیبی (Mixed-Methods)</strong> استفاده می‌کند. معماری روش‌شناختی این تحقیق به صراحت از پروتکل‌های اعتبارسنجی قدرتمند در ادبیات آینده‌نگاری سازمانی، به ویژه منطق مدل‌سازی پژوهشگرانی چون <strong>رنه روربک</strong>، الهام گرفته است. این رویکرد تضمین می‌کند که چارچوب نهایی از نظر نظری مستحکم، از نظر تجربی قابل تأیید و در عمل کاربردی خواهد بود."
+                }
+            },
+            // Slide 9: Phase I
+            {
+                type: 'image_list',
+                image: { src: 'https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', alt: 'Group of experts in a focused discussion, representing the Delphi method' },
+                en: {
+                    title: "Phase I: Conceptual Development & Content Validation",
+                    method: "Structured Online Delphi Method",
+                    points: [
+                        "<strong>Objective:</strong> To establish robust content and face validity for the FREM's theoretical constructs.",
+                        "<strong>Method:</strong> An iterative, anonymous, multi-round process involving a panel of 15-20 globally recognized academic and practitioner experts.",
+                        "<strong>Rationale:</strong> The Delphi technique is optimally suited for mitigating cognitive biases (e.g., groupthink) and achieving a rigorous, distilled expert consensus.",
+                        "<strong>Output:</strong> A content-validated theoretical framework and its corresponding measurement items."
+                    ]
+                },
+                fa: {
+                    title: "فاز اول: توسعه ابزار و اعتبار محتوایی",
+                    method: "روش دلفی آنلاین ساختاریافته",
+                    points: [
+                        "<strong>هدف:</strong> ایجاد اعتبار محتوایی و صوری چارچوب FREM و اقلام اندازه‌گیری مرتبط، اطمینان از جامع، مرتبط و واضح بودن آن‌ها.",
+                        "<strong>روش:</strong> بر اساس مرور ادبیات جامع، یک مجموعه جامع از اقلام اندازه‌گیری برای هر یک از هفت ستون FREM تولید می‌شود. سپس یک بررسی پانل متخصصان ساختاریافته با استفاده از اصول روش دلفی انجام می‌شود.",
+                        "<strong>منطق انتخاب:</strong> تکنیک دلفی برای کاهش سوگیری‌های شناختی و دستیابی به یک اجماع تخصصی پالایش‌شده، بهینه است.",
+                        "<strong>خروجی:</strong> مجموعه اقلام اعتبارسنجی شده برای ابزار نظرسنجی FREM، مدل مفهومی اصلاح شده، و گزارش بررسی متخصصان."
+                    ]
+                }
+            },
+            // Slide 10: Phase II
+            {
+                type: 'image_list',
+                image: { src: 'https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', alt: 'Abstract data visualization representing factor analysis' },
+                en: {
+                    title: "Phase II: Instrument Refinement & Pilot Testing",
+                    method: "Pilot Survey & Exploratory Factor Analysis (EFA)",
+                    points: [
+                        "<strong>Objective:</strong> To empirically test the initial instrument and assess its psychometric properties.",
+                        "<strong>Method:</strong> Administration of the survey to a pilot sample of 50-100 entrepreneurs, followed by Reliability Analysis and EFA.",
+                        "<strong>Rationale:</strong> EFA provides a crucial, data-driven examination of the instrument's underlying factor structure, ensuring its coherence prior to large-scale validation.",
+                        "<strong>Output:</strong> A psychometrically refined and validated survey instrument."
+                    ]
+                },
+                fa: {
+                    title: "فاز دوم: اصلاح ابزار و آزمون مقدماتی (پایلوت)",
+                    method: "پیمایش پایلوت و تحلیل عاملی اکتشافی (EFA)",
+                    points: [
+                        "<strong>هدف:</strong> آزمون تجربی ابزار اولیه و ارزیابی ویژگی‌های روان‌سنجی آن.",
+                        "<strong>روش:</strong> اجرای پیمایش بر روی نمونه پایلوت ۵۰ تا ۱۰۰ نفره از کارآفرینان و سپس تحلیل پایایی و تحلیل عاملی اکتشافی.",
+                        "<strong>منطق انتخاب:</strong> تحلیل عاملی اکتشافی، یک بررسی داده‌محور و حیاتی از ساختار عاملی زیربنایی ابزار را فراهم کرده و انسجام آن را پیش از اعتبارسنجی نهایی تضمین می‌کند.",
+                        "<strong>خروجی:</strong> یک ابزار سنجش که از نظر روان‌سنجی اصلاح و اعتباریابی شده است."
+                    ]
+                }
+            },
+            // Slide 11: Phase III
+            {
+                type: 'dual_column',
+                en: {
+                    title: "Phase III: Large-Scale Mixed-Methods Validation",
+                    col1_title: "Quantitative Validation",
+                    col1_method: "Survey & Structural Equation Modeling (SEM)",
+                    col1_text: "A large-scale survey (>300 entrepreneurs) will be deployed to test the model's predictive validity on venture performance outcomes using SEM.",
+                    col2_title: "Qualitative Validation",
+                    col2_method: "Multiple Case Studies",
+                    col2_text: "In-depth, longitudinal case studies with 4-6 ventures to provide a rich, contextualized understanding of the FREM's practical application and utility."
+                },
+                fa: {
+                    title: "فاز سوم: اعتبارسنجی تجربی ترکیبی",
+                    col1_title: "اعتبارسنجی کمّی",
+                    col1_method: "نظرسنجی مقطعی و مدل‌سازی معادلات ساختاری (SEM)",
+                    col1_text: "یک نظرسنجی مقطعی در مقیاس بزرگ با نمونه هدف بیش از ۳۰۰ کارآفرین انجام می‌شود. داده‌ها با استفاده از تحلیل عاملی تأییدی (CFA) و مدل‌سازی معادلات ساختاری (SEM) تحلیل می‌شوند.",
+                    col2_title: "اعتبارسنجی کیفی",
+                    col2_method: "مطالعات موردی عمیق",
+                    col2_text: "مطالعات موردی عمیق و طولی با ۴ تا ۶ استارتاپ فناوری در مراحل اولیه برای درک کاربرد عملی FREM و تأثیر آن بر تفکر و اقدامات استراتژیک کارآفرینان."
+                }
+            },
+            // Slide 12: Summary Table
+            {
+                type: 'table',
+                en: {
+                    title: "Summary of Research Protocol",
+                    headers: ["Phase", "Key Activity", "Methodology", "Primary Output"],
+                    rows: [
+                        ["I", "Conceptualization & Content Validation", "Structured Online Delphi", "Content-validated constructs and survey items."],
+                        ["II", "Instrument Refinement", "Pilot Survey & EFA", "A psychometrically refined survey instrument."],
+                        ["III", "Large-Scale Validation", "Survey (SEM) & Multiple Case Studies", "A validated model linking FREM to performance & deep contextual insights."]
+                    ]
+                },
+                fa: {
+                    title: "خلاصه پروتکل پژوهش",
+                    headers: ["فاز", "فعالیت کلیدی", "روش‌شناسی", "خروجی اصلی"],
+                    rows: [
+                        ["اول", "توسعه ابزار و اعتبار محتوایی", "مرور ادبیات، روش دلفی", "ابزار FREM نسخه ۱.۰، گزارش بررسی متخصصان"],
+                        ["دوم", "مطالعه پایلوت", "نظرسنجی پایلوت، تحلیل عاملی اکتشافی", "ابزار FREM نسخه ۲.۰، گزارش پایلوت"],
+                        ["سوم", "اعتبارسنجی تجربی ترکیبی", "نظرسنجی (SEM) و مطالعات موردی", "مدل تأیید شده، روایی و پایایی، درک عملی کاربرد FREM"]
+                    ]
+                }
+            },
+            // Slide 13: FREM Seven Pillars
+            {
+                type: 'image_list',
+                image: { src: 'https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', alt: 'Strategic framework visualization' },
+                en: {
+                    title: "FREM Framework: Seven Core Pillars",
+                    method: "Dynamic Capabilities & Strategic Foresight",
+                    points: [
+                        "<strong>1. Vision and Strategy:</strong> Capacity to articulate and pursue a clear, long-term entrepreneurial vision robust to future trends.",
+                        "<strong>2. Skills and Capabilities:</strong> Current skills and, more importantly, capacity to learn, unlearn, and relearn in response to changing requirements.",
+                        "<strong>3. Innovation Culture:</strong> Shared mindset and practices fostering creativity, experimentation, and continuous improvement.",
+                        "<strong>4. Technology and Resources:</strong> Adequacy of tools, technologies, and capital, coupled with strategic acumen to deploy them effectively.",
+                        "<strong>5. Market Insight:</strong> Processes for systematically perceiving and interpreting market dynamics and weak signals of change.",
+                        "<strong>6. Sustainability and Ethics:</strong> Foundational commitment to ethical practices and creation of long-term sustainable value.",
+                        "<strong>7. Risk Management:</strong> Ability to anticipate, manage, and mitigate risks while developing resilience to deep uncertainty."
+                    ]
+                },
+                fa: {
+                    title: "چارچوب FREM: هفت ستون اصلی",
+                    method: "قابلیت‌های پویا و آینده‌نگاری استراتژیک",
+                    points: [
+                        "<strong>۱. چشم‌انداز و استراتژی:</strong> ظرفیت بیان و پیگیری چشم‌انداز کارآفرینانه بلندمدت که در برابر روندهای آینده مقاوم است.",
+                        "<strong>۲. مهارت‌ها و قابلیت‌ها:</strong> مهارت‌های فعلی و مهم‌تر از آن، ظرفیت یادگیری، فراموشی و یادگیری مجدد در پاسخ به نیازهای در حال تغییر.",
+                        "<strong>۳. فرهنگ نوآوری:</strong> ذهنیت و شیوه‌های مشترک که خلاقیت، آزمایش و بهبود مستمر را تقویت می‌کند.",
+                        "<strong>۴. فناوری و منابع:</strong> کفایت ابزارها، فناوری‌ها و سرمایه، همراه با بینش استراتژیک برای استقرار مؤثر آن‌ها.",
+                        "<strong>۵. بینش بازار:</strong> فرآیندهای سیستماتیک برای درک و تفسیر پویایی‌های بازار و سیگنال‌های ضعیف تغییر.",
+                        "<strong>۶. پایداری و اخلاق:</strong> تعهد بنیادین به شیوه‌های اخلاقی و ایجاد ارزش پایدار بلندمدت.",
+                        "<strong>۷. مدیریت ریسک:</strong> توانایی پیش‌بینی، مدیریت و کاهش ریسک‌ها در حالی که انعطاف‌پذیری در برابر عدم قطعیت عمیق را توسعه می‌دهد."
+                    ]
+                }
+            },
+            // Slide 14: Key Differentiators
+            {
+                type: 'problem_part',
+                en: {
+                    title: "Key Differentiators: FREM vs. Existing Models",
+                    subtitle: "Addressing the Static Nature Limitation",
+                    content: "Unlike Rohrbeck's Future FITness model which provides a static assessment at a single point in time, <strong>FREM is designed as a dynamic, continuous process</strong> that:",
+                    second_para: "1. <strong>Considers multiple uncertainties:</strong> Uses scenario planning to explore multiple plausible futures, not a single future.<br>2. <strong>Continuous feedback:</strong> Designed as an ongoing tool that should be regularly reviewed and updated (e.g., every 3-6 months) to reflect changes in environment and uncertainty.<br>3. <strong>Technology roadmapping integration:</strong> Uses Gartner Hype Cycle as a dynamic lens for assessing emerging technologies' position in their lifecycle.<br>4. <strong>Dynamic risk management:</strong> Specifically designed to address deep uncertainty and 'black swan' events that cannot be predicted with traditional risk models.<br>5. <strong>Dynamic capabilities as core:</strong> Focuses on measuring and developing dynamic capabilities at individual and team levels."
+                },
+                fa: {
+                    title: "تفاوت‌های کلیدی: FREM در مقابل مدل‌های موجود",
+                    subtitle: "پاسخ به محدودیت ایستایی",
+                    content: "برخلاف مدل تناسب آینده روهربک که یک ارزیابی ایستا در یک نقطه زمانی ارائه می‌دهد، <strong>FREM به‌عنوان یک فرآیند پویا و مداوم طراحی شده است</strong> که:",
+                    second_para: "۱. <strong>عدم قطعیت‌های متعدد را در نظر می‌گیرد:</strong> از سناریوسازی برای کاوش چندین آینده محتمل استفاده می‌کند، نه یک آینده واحد.<br>۲. <strong>بازخورد مداوم:</strong> به‌عنوان یک ابزار مداوم طراحی شده که باید به‌طور منظم (مثلاً هر سه یا شش ماه) بازبینی و به‌روزرسانی شود.<br>۳. <strong>یکپارچه‌سازی نقشه‌برداری فناوری:</strong> از چرخه هیجان گارتنر به‌عنوان یک لنز پویا برای ارزیابی موقعیت فناوری‌های نوظهور استفاده می‌کند.<br>۴. <strong>مدیریت ریسک پویا:</strong> به‌طور خاص برای مقابله با عدم قطعیت عمیق و رویدادهای «قوی سیاه» طراحی شده است.<br>۵. <strong>قابلیت‌های پویا به‌عنوان هسته:</strong> بر سنجش و توسعه قابلیت‌های پویا در سطح فردی و تیمی تمرکز می‌کند."
+                }
+            },
+            // Slide 15: Research Objectives
+            {
+                type: 'list',
+                en: {
+                    title: "Research Objectives",
+                    method: "Main and Sub-Objectives",
+                    points: [
+                        "<strong>Main Objective:</strong> Develop and validate FREM as a dynamic and reliable strategic tool for assessing and improving entrepreneurs' readiness for navigating future uncertainties.",
+                        "<strong>Sub-Objective 1:</strong> Identify and define key dimensions of future readiness for entrepreneurship based on dynamic capabilities and strategic foresight theories.",
+                        "<strong>Sub-Objective 2:</strong> Develop a comprehensive framework (FREM) including seven main pillars.",
+                        "<strong>Sub-Objective 3:</strong> Design and validate quantitative measurement instruments for assessing each FREM pillar using standard psychometric methods.",
+                        "<strong>Sub-Objective 4:</strong> Integrate Gartner Hype Cycle as a dynamic lens for assessing emerging technologies' position.",
+                        "<strong>Sub-Objective 5:</strong> Validate FREM content through expert review (Delphi method)."
+                    ]
+                },
+                fa: {
+                    title: "اهداف تحقیق",
+                    method: "هدف اصلی و اهداف فرعی",
+                    points: [
+                        "<strong>هدف اصلی:</strong> توسعه و اعتبارسنجی مدل کارآفرینی آینده‌محور (FREM) به‌عنوان یک ابزار استراتژیک پویا و قابل اعتماد برای ارزیابی و بهبود آمادگی کارآفرینان برای ناوبری در عدم قطعیت‌های آینده.",
+                        "<strong>هدف فرعی ۱:</strong> شناسایی و تعریف ابعاد کلیدی آمادگی آینده برای کارآفرینی بر اساس نظریه قابلیت‌های پویا و آینده‌نگاری استراتژیک.",
+                        "<strong>هدف فرعی ۲:</strong> توسعه یک چارچوب مفهومی جامع (FREM) شامل هفت ستون اصلی.",
+                        "<strong>هدف فرعی ۳:</strong> طراحی و اعتبارسنجی ابزار اندازه‌گیری کمی برای ارزیابی هر یک از ستون‌های FREM با استفاده از روش‌های روان‌سنجی استاندارد.",
+                        "<strong>هدف فرعی ۴:</strong> یکپارچه‌سازی چرخه هیجان گارتنر به‌عنوان یک لنز پویا برای ارزیابی موقعیت فناوری‌های نوظهور.",
+                        "<strong>هدف فرعی ۵:</strong> اعتبارسنجی محتوایی FREM از طریق بررسی متخصصان (روش دلفی)."
+                    ]
+                }
+            },
+            // Slide 16: Research Questions
+            {
+                type: 'research_question',
+                en: {
+                    title: "Main Research Question",
+                    subtitle: "",
+                    question: "How can a comprehensive, dynamic, and validated framework be developed to assess and improve entrepreneurs' readiness for navigating future uncertainties?",
+                    subtitle_fa: ""
+                },
+                fa: {
+                    title: "پرسش اصلی تحقیق",
+                    subtitle: "",
+                    question: "چگونه می‌توان یک چارچوب جامع، پویا و اعتبارسنجی شده برای ارزیابی و بهبود آمادگی کارآفرینان برای ناوبری در عدم قطعیت‌های آینده توسعه داد؟",
+                    subtitle_fa: ""
+                }
+            },
+            // Slide 17: Sub-Research Questions
+            {
+                type: 'list',
+                en: {
+                    title: "Sub-Research Questions",
+                    method: "Key Questions to Address",
+                    points: [
+                        "What are the key dimensions of future readiness for entrepreneurship and how can they be defined based on dynamic capabilities and strategic foresight theories?",
+                        "How can Gartner Hype Cycle be integrated as a dynamic diagnostic tool for assessing entrepreneurs' strategic thinking about emerging technologies?",
+                        "Does the FREM measurement instrument have sufficient content validity, construct validity, and reliability?",
+                        "Do FREM scores have a significant relationship with firm performance metrics (such as revenue growth, innovation rate, success in attracting investment)?",
+                        "How do entrepreneurs use FREM in practice and what impact does it have on their strategic thinking and actions?",
+                        "How can FREM diagnostic outputs be converted into actionable strategic roadmaps?"
+                    ]
+                },
+                fa: {
+                    title: "سوالات فرعی تحقیق",
+                    method: "سوالات کلیدی برای پاسخ",
+                    points: [
+                        "ابعاد کلیدی آمادگی آینده برای کارآفرینی کدامند و چگونه می‌توان آن‌ها را بر اساس نظریه قابلیت‌های پویا و آینده‌نگاری استراتژیک تعریف کرد؟",
+                        "چگونه می‌توان چرخه هیجان گارتنر را به‌عنوان یک ابزار تشخیصی پویا برای ارزیابی تفکر استراتژیک کارآفرینان در مورد فناوری‌های نوظهور یکپارچه کرد؟",
+                        "آیا ابزار اندازه‌گیری FREM از اعتبار محتوایی، اعتبار سازه و پایایی کافی برخوردار است؟",
+                        "آیا نمرات FREM با معیارهای عملکرد بنگاه (مانند رشد درآمد، نرخ نوآوری، موفقیت در جذب سرمایه) رابطه معناداری دارد؟",
+                        "کارآفرینان چگونه از FREM در عمل استفاده می‌کنند و چه تأثیری بر تفکر و اقدامات استراتژیک آن‌ها دارد؟",
+                        "چگونه می‌توان خروجی‌های تشخیصی FREM را به نقشه راه استراتژیک عملیاتی تبدیل کرد؟"
+                    ]
+                }
+            },
+            // Slide 18: Research Hypotheses
+            {
+                type: 'problem_part',
+                en: {
+                    title: "Research Hypotheses",
+                    subtitle: "Main Hypotheses",
+                    content: "<strong>H1:</strong> The seven dimensions of FREM (Vision and Strategy, Skills and Capabilities, Innovation Culture, Technology and Resources, Market Insight, Sustainability and Ethics, Risk Management) significantly load on a higher-order construct of 'Future Readiness'.",
+                    second_para: "<strong>H2:</strong> The 'Future Readiness' construct has a positive and significant relationship with firm performance (revenue growth, innovation rate, success in attracting investment).<br><br><strong>H3:</strong> The relationship between 'Future Readiness' and firm performance is partially mediated by the quality of strategic planning processes (such as the existence and use of technology roadmaps)."
+                },
+                fa: {
+                    title: "فرضیات تحقیق",
+                    subtitle: "فرضیات اصلی",
+                    content: "<strong>H1:</strong> هفت بعد FREM (چشم‌انداز و استراتژی، مهارت‌ها و قابلیت‌ها، فرهنگ نوآوری، فناوری و منابع، بینش بازار، پایداری و اخلاق، مدیریت ریسک) به‌طور معناداری بر یک سازه مرتبه بالاتر «آمادگی آینده» بار می‌کنند.",
+                    second_para: "<strong>H2:</strong> سازه «آمادگی آینده» رابطه مثبت و معناداری با عملکرد بنگاه (رشد درآمد، نرخ نوآوری، موفقیت در جذب سرمایه) دارد.<br><br><strong>H3:</strong> رابطه بین «آمادگی آینده» و عملکرد بنگاه توسط کیفیت فرآیندهای برنامه‌ریزی استراتژیک (مانند وجود و استفاده از نقشه راه فناوری) به‌صورت جزئی میانجی‌گری می‌شود."
+                }
+            },
+            // Slide 19: Expected Contributions
+            {
+                type: 'dual_column',
+                en: {
+                    title: "Expected Contributions",
+                    col1_title: "Theoretical Contributions",
+                    col1_method: "Academic Literature",
+                    col1_text: "1. Extend Dynamic Capabilities theory to individual entrepreneur and nascent venture level.<br>2. Advance Strategic Foresight literature by bridging corporate foresight and entrepreneurship.<br>3. Develop Entrepreneurial Readiness literature by adding a temporal, future-oriented dimension.",
+                    col2_title: "Practical Contributions",
+                    col2_method: "Real-World Applications",
+                    col2_text: "1. <strong>For Entrepreneurs:</strong> Self-assessment tool for identifying strategic blind spots and building resilient ventures.<br>2. <strong>For Investors:</strong> Due diligence tool for assessing future-oriented capability and long-term viability potential.<br>3. <strong>For Accelerators:</strong> Educational tool for developing future-oriented thinking as a core competency."
+                },
+                fa: {
+                    title: "پیش‌بینی نتایج و کاربردهای تحقیق",
+                    col1_title: "کاربردهای نظری",
+                    col1_method: "ادبیات آکادمیک",
+                    col1_text: "۱. گسترش نظریه قابلیت‌های پویا به سطح کارآفرین فردی و بنگاه نوپا.<br>۲. پیشبرد ادبیات آینده‌نگاری استراتژیک با پر کردن شکاف بین آینده‌نگاری شرکتی و کارآفرینی.<br>۳. توسعه ادبیات آمادگی کارآفرینانه با افزودن بعد زمانی و آینده‌نگر.",
+                    col2_title: "کاربردهای عملی",
+                    col2_method: "کاربردهای دنیای واقعی",
+                    col2_text: "۱. <strong>برای کارآفرینان:</strong> ابزار خودارزیابی برای شناسایی نقاط کور استراتژیک و ساخت بنگاه‌های مقاوم.<br>۲. <strong>برای سرمایه‌گذاران:</strong> ابزار بررسی دقیق برای ارزیابی قابلیت آینده‌نگاری و پتانسیل قابلیت حیات بلندمدت.<br>۳. <strong>برای مراکز رشد:</strong> ابزار آموزشی برای توسعه تفکر آینده‌نگر به‌عنوان یک شایستگی اصلی."
+                }
+            },
+            // Slide 20: Timeline
+            {
+                type: 'table',
+                en: {
+                    title: "Research Timeline",
+                    headers: ["Phase", "Key Activities", "Methodology", "Timeline"],
+                    rows: [
+                        ["Phase I", "Conceptual Development & Content Validation", "Literature Review, Delphi Method", "Year 1, Q1-Q2"],
+                        ["Phase II", "Instrument Refinement & Pilot Testing", "Pilot Survey, EFA", "Year 1, Q3-Q4"],
+                        ["Phase IIIa (Quantitative)", "Large-Scale Quantitative Validation", "Cross-sectional Survey, CFA, SEM", "Year 2, Q1-Q3"],
+                        ["Phase IIIb (Qualitative)", "In-Depth Case Studies", "Interviews, Observation, Document Analysis", "Year 2, Q2 - Year 3, Q1"],
+                        ["Phase IV", "Integration & Writing", "Quantitative-Qualitative Synthesis", "Year 3, Q2-Q4"]
+                    ]
+                },
+                fa: {
+                    title: "جدول زمان‌بندی تحقیق",
+                    headers: ["فاز", "فعالیت‌های اصلی", "روش‌شناسی", "زمان‌بندی"],
+                    rows: [
+                        ["فاز اول", "توسعه مفهومی و اعتبارسنجی محتوا", "مرور ادبیات، روش دلفی", "سال اول، سه‌ماهه ۱-۲"],
+                        ["فاز دوم", "اصلاح ابزار و آزمون مقدماتی", "نظرسنجی پایلوت، تحلیل عاملی اکتشافی", "سال اول، سه‌ماهه ۳-۴"],
+                        ["فاز سوم الف (کمی)", "اعتبارسنجی کمی در مقیاس بزرگ", "نظرسنجی مقطعی، CFA، SEM", "سال دوم، سه‌ماهه ۱-۳"],
+                        ["فاز سوم ب (کیفی)", "مطالعات موردی عمیق", "مصاحبه، مشاهده، تحلیل اسناد", "سال دوم، سه‌ماهه ۲ - سال سوم، سه‌ماهه ۱"],
+                        ["فاز چهارم", "یکپارچه‌سازی یافته‌ها و نگارش", "سنتز کمی-کیفی", "سال سوم، سه‌ماهه ۲-۴"]
+                    ]
+                }
+            },
+            // Slide 21: Limitations
+            {
+                type: 'list',
+                en: {
+                    title: "Research Limitations",
+                    method: "Methodological, Conceptual, and Practical",
+                    points: [
+                        "<strong>Methodological:</strong> Cross-sectional nature of quantitative study cannot definitively prove causal relationships. Future longitudinal studies are necessary.",
+                        "<strong>Methodological:</strong> Limited number of case studies (4-6 ventures) provides depth but limits generalizability.",
+                        "<strong>Methodological:</strong> FREM instrument relies on self-reporting by entrepreneurs, which may be subject to social desirability bias.",
+                        "<strong>Conceptual:</strong> 'Future Readiness' is an abstract construct and its operational definition may not cover all its dimensions.",
+                        "<strong>Practical:</strong> Access to successful and available entrepreneurs may be challenging.",
+                        "<strong>Practical:</strong> Multi-phase validation process requires significant time that may conflict with PhD program time constraints."
+                    ]
+                },
+                fa: {
+                    title: "محدودیت‌های تحقیق",
+                    method: "روش‌شناختی، مفهومی و عملی",
+                    points: [
+                        "<strong>روش‌شناختی:</strong> ماهیت مقطعی مطالعه کمی نمی‌تواند روابط علّی را به‌طور قطعی اثبات کند. مطالعات طولی آینده ضروری است.",
+                        "<strong>روش‌شناختی:</strong> تعداد محدود مطالعات موردی (۴-۶ بنگاه) عمق را فراهم می‌کند اما تعمیم‌پذیری را محدود می‌کند.",
+                        "<strong>روش‌شناختی:</strong> ابزار FREM بر اساس خودگزارشی کارآفرینان است که ممکن است تحت تأثیر سوگیری‌های اجتماعی مطلوبیت قرار گیرد.",
+                        "<strong>مفهومی:</strong> «آمادگی آینده» یک سازه انتزاعی است و تعریف عملیاتی آن ممکن است تمام ابعاد آن را پوشش ندهد.",
+                        "<strong>عملی:</strong> دسترسی به کارآفرینان موفق و در دسترس ممکن است چالش‌برانگیز باشد.",
+                        "<strong>عملی:</strong> فرآیند اعتبارسنجی چندفازی نیاز به زمان قابل توجهی دارد که ممکن است با محدودیت‌های زمانی دوره دکتری در تعارض باشد."
+                    ]
+                }
+            },
+            // Slide 22: Expected Results
+            {
+                type: 'problem_part',
+                en: {
+                    title: "Expected Results",
+                    subtitle: "Key Outcomes",
+                    content: "1. <strong>Development of FREM Tool:</strong> A validated instrument for assessing entrepreneurs' future readiness.<br><br>2. <strong>Confirmation of Seven-Factor Structure:</strong> Empirical confirmation of seven FREM pillars as key dimensions of future readiness.<br><br>3. <strong>Relationship with Performance:</strong> Identification of positive relationship between FREM scores and firm performance metrics.<br><br>4. <strong>Understanding Practical Application:</strong> Deep understanding of how entrepreneurs use FREM and its impact on decision-making.<br><br>5. <strong>Operational Process:</strong> Development of a specific process for converting FREM diagnosis into strategic roadmaps.",
+                    second_para: ""
+                },
+                fa: {
+                    title: "نتایج مورد انتظار",
+                    subtitle: "نتایج کلیدی",
+                    content: "۱. <strong>توسعه ابزار FREM:</strong> یک ابزار اعتبارسنجی شده برای ارزیابی آمادگی آینده کارآفرینان.<br><br>۲. <strong>تأیید ساختار هفت عاملی:</strong> تأیید تجربی هفت ستون FREM به‌عنوان ابعاد کلیدی آمادگی آینده.<br><br>۳. <strong>رابطه با عملکرد:</strong> شناسایی رابطه مثبت بین نمرات FREM و معیارهای عملکرد بنگاه.<br><br>۴. <strong>درک کاربرد عملی:</strong> درک عمیق از نحوه استفاده کارآفرینان از FREM و تأثیر آن بر تصمیم‌گیری.<br><br>۵. <strong>فرآیند عملیاتی:</strong> توسعه یک فرآیند مشخص برای تبدیل تشخیص FREM به نقشه راه استراتژیک.",
+                    second_para: ""
+                }
+            },
+            // Slide 23: Future Applications - Database & LLM
+            {
+                type: 'dual_column',
+                en: {
+                    title: "Future Applications: Database & LLM Integration",
+                    col1_title: "Knowledge Database",
+                    col1_method: "Vector Database + Embeddings",
+                    col1_text: "The validated FREM framework and all research findings will be stored in a <strong>vector database</strong> (e.g., Pinecone, Weaviate, or ChromaDB) with semantic embeddings. This enables:<br><br>• <strong>Semantic Search:</strong> Query the research corpus using natural language<br>• <strong>Knowledge Retrieval:</strong> Access relevant findings, methodologies, and case studies instantly<br>• <strong>Continuous Learning:</strong> Update database with new research and real-world applications<br>• <strong>Multi-language Support:</strong> Persian and English content seamlessly integrated",
+                    col2_title: "LLM-Based Assistant",
+                    col2_method: "Fine-tuned Language Model",
+                    col2_text: "A <strong>fine-tuned Large Language Model (LLM)</strong> will be developed based on the FREM research corpus to provide:<br><br>• <strong>Intelligent Consultation:</strong> Answer questions about FREM framework, methodology, and applications<br>• <strong>Personalized Guidance:</strong> Help entrepreneurs assess their future readiness using FREM<br>• <strong>24/7 Online Access:</strong> Always-available assistant for researchers, entrepreneurs, and practitioners<br>• <strong>Context-Aware Responses:</strong> Leverages entire research knowledge base for accurate, referenced answers"
+                },
+                fa: {
+                    title: "کاربردهای آینده: دیتابیس و مدل زبان بزرگ",
+                    col1_title: "دیتابیس دانش",
+                    col1_method: "دیتابیس برداری + Embeddings",
+                    col1_text: "چارچوب اعتبارسنجی شده FREM و تمام یافته‌های تحقیق در یک <strong>دیتابیس برداری</strong> (مانند Pinecone، Weaviate یا ChromaDB) با embeddings معنایی ذخیره خواهد شد. این امکان را فراهم می‌کند:<br><br>• <strong>جستجوی معنایی:</strong> جستجو در محتوای تحقیق با استفاده از زبان طبیعی<br>• <strong>بازیابی دانش:</strong> دسترسی فوری به یافته‌ها، روش‌شناسی‌ها و مطالعات موردی مرتبط<br>• <strong>یادگیری مداوم:</strong> به‌روزرسانی دیتابیس با تحقیقات جدید و کاربردهای دنیای واقعی<br>• <strong>پشتیبانی چندزبانه:</strong> محتوای فارسی و انگلیسی به‌صورت یکپارچه",
+                    col2_title: "دستیار مبتنی بر LLM",
+                    col2_method: "مدل زبان بزرگ Fine-tuned",
+                    col2_text: "یک <strong>مدل زبان بزرگ Fine-tuned</strong> بر اساس محتوای تحقیق FREM توسعه خواهد یافت تا ارائه دهد:<br><br>• <strong>مشاوره هوشمند:</strong> پاسخ به سوالات درباره چارچوب FREM، روش‌شناسی و کاربردها<br>• <strong>راهنمایی شخصی‌سازی شده:</strong> کمک به کارآفرینان برای ارزیابی آمادگی آینده خود با استفاده از FREM<br>• <strong>دسترسی آنلاین ۲۴/۷:</strong> دستیار همیشه در دسترس برای محققان، کارآفرینان و متخصصان<br>• <strong>پاسخ‌های آگاه از زمینه:</strong> استفاده از کل پایگاه دانش تحقیق برای پاسخ‌های دقیق و مستند"
+                }
+            },
+            // Slide 24: Thank You
+            {
+                type: 'title',
+                en: {
+                    title: "Thank You",
+                    subtitle: "Questions & Discussion",
+                    author: "Ali Mansouri",
+                    role: "PhD Candidate, Futures Studies"
+                },
+                fa: {
+                    title: "سپاسگزارم",
+                    subtitle: "سوالات و بحث",
+                    author: "علی منصوری",
+                    role: "دانشجوی دکتری آینده‌پژوهی"
+                }
+            }
+        ];
+
+        // --- REVISED APPLICATION LOGIC with refined image handling ---
+        const slides = Array.from(document.querySelectorAll('.slide'));
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideCounter = document.getElementById('slide-counter');
+        const progressBar = document.getElementById('progressBar');
+        const progressBarContainer = document.getElementById('progressBarContainer');
+        const progressTooltip = document.getElementById('progressTooltip');
+        const langToggle = document.getElementById('lang-toggle');
+        const body = document.body;
+
+        let currentSlide = 0;
+        let currentLang = 'en';
+        let isAnimating = false;
+
+        function updateLanguage() {
+            slides.forEach((slideEl, index) => {
+                const slideData = slidesData[index];
+                if (!slideData) return;
+                const data = slideData[currentLang];
+                let content = '';
+
+                const hasImage = slideData.image;
+                const imageHtml = hasImage ? `<div class="image-container hidden lg:block rounded-lg overflow-hidden fade-in-item shadow-md"><a href="${slideData.image.src}" target="_blank" rel="noopener noreferrer"><img src="${slideData.image.src}" alt="${slideData.image.alt}"></a></div>` : '';
+                const textContentClass = hasImage ? "lg:col-span-2" : "col-span-full";
+                const gridClass = hasImage ? 'grid lg:grid-cols-3 gap-8 items-center' : '';
+                
+                if (slideData.type === 'title') {
+                    content = `<div class="text-center">
+                        <h2 class="text-4xl md:text-5xl font-bold title-primary fade-in-item" data-lang-text="title"></h2>
+                        <p class="mt-4 text-lg md:text-xl text-slate-600 fade-in-item" data-lang-text="subtitle"></p>
+                        <div class="mt-12 border-t border-slate-200 pt-6 fade-in-item">
+                            <p class="text-xl font-semibold text-slate-800" data-lang-text="author"></p>
+                            <p class="text-md text-slate-500" data-lang-text="role"></p>
+                        </div></div>`;
+                } else if (slideData.type === 'list' || slideData.type === 'image_list') {
+                     content = `<div class="${gridClass}">
+                        ${imageHtml}
+                        <div class="${textContentClass}">
+                        <h3 class="text-2xl md:text-3xl font-semibold mb-2 text-slate-800 fade-in-item" data-lang-text="title"></h3>
+                        <p class="method-subtitle mb-6 fade-in-item" data-lang-text="method"></p>
+                        <ul class="space-y-4 text-lg" data-lang-list="points"></ul>
+                        </div></div>`;
+                } else if (slideData.type === 'text' || slideData.type === 'image_text') {
+                     content = `<div class="${gridClass}">
+                        ${imageHtml}
+                        <div class="${textContentClass}">
+                        <h3 class="text-2xl md:text-3xl font-semibold mb-6 text-slate-800 fade-in-item" data-lang-text="title"></h3>
+                        <p class="text-lg md:text-xl leading-relaxed text-slate-600 fade-in-item" data-lang-text="text"></p>
+                        </div></div>`;
+                } else if (slideData.type === 'problem_part') {
+                    content = `<div class="max-w-4xl mx-auto">
+                        <h3 class="text-2xl md:text-3xl font-semibold mb-4 text-slate-800 fade-in-item text-center" data-lang-text="title"></h3>
+                        <div class="bg-content-box p-8 rounded-lg border border-slate-200 mt-8 fade-in-item">
+                            <h4 class="font-semibold text-xl mb-4 title-primary" data-lang-text="subtitle"></h4>
+                            <p class="text-slate-600 leading-relaxed text-lg mb-4" data-lang-text="content"></p>
+                            <p class="text-slate-600 leading-relaxed text-lg" data-lang-text="second_para"></p>
+                        </div>
+                    </div>`;
+                } else if (slideData.type === 'research_question') {
+                    content = `<div class="text-center max-w-4xl mx-auto">
+                        <h3 class="text-2xl md:text-3xl font-semibold mb-8 text-slate-800 fade-in-item" data-lang-text="title"></h3>
+                        <div class="bg-gradient-to-r from-blue-50 to-sky-50 p-8 md:p-12 rounded-xl border-2 border-blue-200 fade-in-item">
+                            <p class="text-lg md:text-xl leading-relaxed text-slate-700 font-medium" data-lang-text="question"></p>
+                        </div>
+                    </div>`;
+                } else if (slideData.type === 'dual_column') {
+                    content = `<div>
+                        <h3 class="text-2xl md:text-3xl font-semibold mb-8 text-center text-slate-800 fade-in-item" data-lang-text="title"></h3>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="fade-in-item bg-content-box p-6 rounded-lg border border-slate-200"><h4 class="font-semibold text-xl mb-2 title-primary" data-lang-text="col1_title"></h4><p class="method-subtitle mb-3" data-lang-text="col1_method"></p><p class="text-slate-600" data-lang-text="col1_text"></p></div>
+                            <div class="fade-in-item bg-content-box p-6 rounded-lg border border-slate-200"><h4 class="font-semibold text-xl mb-2 title-primary" data-lang-text="col2_title"></h4><p class="method-subtitle mb-3" data-lang-text="col2_method"></p><p class="text-slate-600" data-lang-text="col2_text"></p></div>
+                        </div></div>`;
+                } else if (slideData.type === 'table') {
+                    content = `<div>
+                        <h3 class="text-2xl md:text-3xl font-semibold mb-6 text-slate-800 fade-in-item" data-lang-text="title"></h3>
+                        <div class="overflow-x-auto fade-in-item bg-content-box rounded-lg border border-slate-200">
+                            <table class="w-full text-left">
+                                <thead data-lang-table-headers="headers"></thead>
+                                <tbody data-lang-table-rows="rows"></tbody>
+                            </table></div></div>`;
+                }
+                slideEl.innerHTML = content;
+                
+                Object.keys(data).forEach(key => {
+                    const textEl = slideEl.querySelector(`[data-lang-text="${key}"]`);
+                    if(textEl) textEl.innerHTML = data[key] || '';
+                    const listEl = slideEl.querySelector(`[data-lang-list="${key}"]`);
+                    if(listEl) {
+                        listEl.innerHTML = data[key].map(point => `<li class="flex items-start fade-in-item"><svg class="w-6 h-6 text-blue-500 mr-4 rtl:ml-4 rtl:mr-0 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><div class="text-slate-600">${point}</div></li>`).join('');
+                    }
+                    const sectionsEl = slideEl.querySelector(`[data-lang-sections="${key}"]`);
+                    if(sectionsEl) {
+                        sectionsEl.innerHTML = data[key].map((section, idx) => `
+                            <div class="fade-in-item bg-content-box p-6 rounded-lg border border-slate-200" style="animation-delay: ${0.6 + (idx * 0.2)}s">
+                                <h4 class="font-semibold text-xl mb-3 title-primary">${section.subtitle}</h4>
+                                <p class="text-slate-600 leading-relaxed">${section.content}</p>
+                            </div>
+                        `).join('');
+                    }
+                    const tableHeadersEl = slideEl.querySelector(`[data-lang-table-headers="${key}"]`);
+                    if(tableHeadersEl) {
+                         tableHeadersEl.innerHTML = `<tr>${data[key].map(h => `<th class="p-4 font-semibold uppercase text-sm text-slate-800 border-b border-slate-300">${h}</th>`).join('')}</tr>`;
+                    }
+                     const tableRowsEl = slideEl.querySelector(`[data-lang-table-rows="${key}"]`);
+                    if(tableRowsEl) {
+                        tableRowsEl.innerHTML = data[key].map(row => `<tr class="border-b border-slate-200">${row.map(cell => `<td class="p-4 text-slate-600">${cell}</td>`).join('')}</tr>`).join('');
+                    }
+                });
+            });
+            body.classList.toggle('rtl', currentLang === 'fa');
+            updateCounter();
+            updateButtonDirection();
+        }
+
+        function updateCounter() {
+            const enText = `Slide ${currentSlide + 1} of ${slides.length}`;
+            const faText = `اسلاید ${currentSlide + 1} از ${slides.length}`;
+            slideCounter.textContent = currentLang === 'en' ? enText : faText;
+        }
+        
+        function updateTooltip(slideNumber) {
+            const enText = `Slide ${slideNumber}`;
+            const faText = `اسلاید ${slideNumber}`;
+            const tooltipSpan = document.getElementById('tooltipText');
+            if (tooltipSpan) {
+                tooltipSpan.textContent = currentLang === 'en' ? enText : faText;
+            }
+        }
+
+        function goToSlide(slideIndex, direction = 'next') {
+            if (isAnimating || slideIndex < 0 || slideIndex >= slides.length) return;
+            isAnimating = true;
+            const currentSlideEl = slides[currentSlide];
+            const nextSlideEl = slides[slideIndex];
+            const exitClass = direction === 'next' ? 'slide-exit-next' : 'slide-exit-prev';
+            const enterClass = direction === 'next' ? 'slide-enter-next' : 'slide-enter-prev';
+            nextSlideEl.className = 'p-8 sm:p-12 slide';
+            void nextSlideEl.offsetWidth;
+            nextSlideEl.classList.add(enterClass);
+            currentSlideEl.classList.add(exitClass);
+            nextSlideEl.classList.add('active');
+            currentSlide = slideIndex;
+            setTimeout(() => {
+                currentSlideEl.classList.remove('active', exitClass);
+                nextSlideEl.classList.remove(enterClass);
+                isAnimating = false;
+            }, 800);
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            updateCounter();
+        }
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'fa' : 'en';
+            updateLanguage();
+        });
+        
+        // Fix button direction for RTL
+        function updateButtonDirection() {
+            if (currentLang === 'fa') {
+                // In RTL, swap the buttons visually
+                prevBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
+                nextBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>';
+            } else {
+                // In LTR, normal direction
+                prevBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>';
+                nextBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
+            }
+        }
+        
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1, 'next'));
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1, 'prev'));
+        
+        // Progress bar click to jump to slide
+        progressBarContainer.addEventListener('click', (e) => {
+            const rect = progressBarContainer.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const percentage = clickX / rect.width;
+            const targetSlide = Math.round(percentage * slides.length);
+            if (targetSlide >= 1 && targetSlide <= slides.length) {
+                const direction = targetSlide > currentSlide + 1 ? 'next' : 'prev';
+                goToSlide(targetSlide - 1, direction);
+            }
+        });
+        
+        // Progress bar hover to show tooltip
+        progressBarContainer.addEventListener('mousemove', (e) => {
+            const rect = progressBarContainer.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const percentage = clickX / rect.width;
+            const targetSlide = Math.max(1, Math.min(slides.length, Math.round(percentage * slides.length)));
+            updateTooltip(targetSlide);
+            
+            // Position tooltip
+            const tooltipLeft = clickX;
+            progressTooltip.style.left = `${tooltipLeft}px`;
+        });
+
+        function init() {
+            updateLanguage();
+            updateButtonDirection();
+            const firstSlide = slides[0];
+            firstSlide.classList.add('active');
+            isAnimating = true;
+            setTimeout(() => { isAnimating = false; }, 800);
+            updateCounter();
+            prevBtn.disabled = true;
+            progressBar.style.width = `${(1 / slides.length) * 100}%`;
+        }
+
+        init();
+    </script>
+</body>
+</html>
